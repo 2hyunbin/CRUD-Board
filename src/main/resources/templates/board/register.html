@@ -67,15 +67,22 @@
                     <h5 class="modal-title">Upload File</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
 
-            <div class="modal-body">
-                <div class="input-group mb-3">
-                    <input type="file" name="file" class="form-control" multiple>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/upload.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -85,11 +92,38 @@
 
     let errorMsg = '';
 
-    if(errors){
-        for (let i = 0; i < errors.length; i++){
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
             errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`;
         }
         alert(errorMsg);
     }
+
+    //업로드 모달
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"));
+
+    document.querySelector(".uploadFileBtn").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        uploadModal.show();
+    }, false)
+
+    document.querySelector(".uploadBtn").addEventListener("click", function (e) {
+        const formObj = new FormData;
+        const fileInput = document.querySelector("input[name='files']");
+        console.log(fileInput.files);
+        const files = fileInput.files;
+
+        for (let i = 0; i < files.length; i++) {
+            formObj.append("files", files[i]);
+        }
+
+        uploadToServer(formObj).then(result => {
+            console.log(result);
+            uploadModal.hide();
+        }).catch(e => {
+            uploadModal.hide();
+        })
+    })
 </script>
 </html>
