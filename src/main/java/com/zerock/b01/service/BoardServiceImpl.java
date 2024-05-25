@@ -30,7 +30,7 @@ public class BoardServiceImpl implements BoardService{
     public Long register(BoardDTO boardDTO){
 
         Board board = dtoToEntity(boardDTO);
-
+        log.info(board);
         Long bno = boardRepository.save(board).getBno();
 
         return bno;

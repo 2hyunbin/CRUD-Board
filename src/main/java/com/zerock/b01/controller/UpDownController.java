@@ -46,7 +46,7 @@ public class UpDownController {
                 log.info(originalName);
 
                 String uuid = UUID.randomUUID().toString();
-
+                log.info(uuid);
                 Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
 
                 boolean image = false;
@@ -84,16 +84,15 @@ public class UpDownController {
     public ResponseEntity<Resource> viewFileGET(@PathVariable String filename) {
 
         Resource resource = new FileSystemResource(uploadPath + File.separator + filename);
-
+        log.info(resource);
         String resourceName = resource.getFilename();
         HttpHeaders headers = new HttpHeaders();
 
         try {
-
             headers.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
-
+            log.info(Files.probeContentType(resource.getFile().toPath()));
         } catch (Exception e) {
-
+            log.info("fail");
             return ResponseEntity.internalServerError().build();
 
         }
